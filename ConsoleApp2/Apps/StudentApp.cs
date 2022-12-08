@@ -75,13 +75,11 @@ namespace ConsoleApp2.Apps
             var Grades = _grade.GetAll();
             var subjects = _subject.GetAll();
             var studentClasses = _studentClass.GetAll();
-            var teachers = _teacher.GetAll();
 
             var studentDto = from studentClass in studentClasses
                              join student in students on studentClass.Id equals student.ClassId
-                             join grade in Grades on student.Id equals grade.Id
+                             join grade in Grades on student.Id equals grade.StudentId
                              join subject in subjects on grade.SubjectId equals subject.Id
-                             join teacher in teachers on subject.Id equals teacher.SubjectId
                              where student.Id == InputInt
                              select new StudentDto
                              {
@@ -90,12 +88,10 @@ namespace ConsoleApp2.Apps
                                  ClassName = studentClass.ClassName,
                                  Score = grade.Score,
                                  SubjectName = subject.SubjectName,
-                                 TeacherName= teacher.TeacherName,
                              };
 
             var StudentGrade = new Pages<StudentDto>(studentDto.ToList());
             StudentGrade.page();
-            Console.ReadKey();
             
 
         }

@@ -13,7 +13,5 @@ namespace ConsoleApp2.Apps.Dto
         public string ClassName { get; set; }
         public string SubjectName { get; set; }
         public int Score { get; set; }
-        public string TeacherName { get; set; }
-
     }
 }

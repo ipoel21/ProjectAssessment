@@ -18,6 +18,10 @@ namespace ConsoleApp2.Apps
         Teacher _teacher;
         public TeacherApp(Student student, StudentGrade grade, Subject subject, Class studentClass, Teacher teacher)
         {
+            _student = student;
+            _grade = grade;
+            _subject = subject;
+            _studentClass = studentClass;
             _teacher = teacher;
 
         }
@@ -31,8 +35,10 @@ namespace ConsoleApp2.Apps
                 Console.WriteLine("|           Menu Student            |");
                 Console.WriteLine("=====================================");
                 Console.WriteLine("1.Register");
-                Console.WriteLine("2.Show Score");
-                Console.WriteLine("3.Exit");
+                Console.WriteLine("2.GiveScore");
+                Console.WriteLine("3.NextLevelStudent");
+                Console.WriteLine("4.ShowTeacher");
+                Console.WriteLine("5.Exit");
                 Console.Write("\nSelect : ");
                 switch (Console.ReadLine())
                 {
@@ -46,15 +52,26 @@ namespace ConsoleApp2.Apps
                         NextLevelStudent();
                         break;
                     case "4":
+                        ShowTeacher();
+                        break;
+                    case "5":
                         Stop = true;
                         break;
                 }
             }
         }
 
+        private void ShowTeacher()
+        {
+            var teachers = _teacher.GetAll();
+            var pageTeacher = new Pages<Teacher>(teachers.ToList());
+            pageTeacher.page();
+        }
+
+       
         private void Register()
         {
-            var subjects = _subject.GetAll();
+            IEnumerable<Subject>? subjects = _subject.GetAll();
             Console.Write("Input Name Teacher: ");
             var input = Console.ReadLine();
             var pageSubject = new Pages<Subject>(subjects.ToList());
@@ -63,19 +80,47 @@ namespace ConsoleApp2.Apps
             var teacher = new Teacher();
             teacher.TeacherName = input;
             teacher.SubjectId = inputInt;
-            _teacher.Add(teacher);
-            
+            _teacher.Add(teacher); 
+            Console.WriteLine("Change Successfully\nPress Enter To Continue....");
+            Console.ReadKey();
+
 
         }
 
         private void GiveScore()
         {
-            throw new NotImplementedException();
+            var grade = new StudentGrade();
+            var subjects = _subject.GetAll();
+            var students = _student.GetAll();
+            var pageSubject = new Pages<Subject>(subjects.ToList());
+            pageSubject.page();
+            var subjectId = Input.InputInt("Chosee Subject: ");
+            var Score = Input.InputInt("Input Score: ");
+            grade.Score = Score;
+            grade.SubjectId= subjectId;
+            var pageStudent = new Pages<Student>(students.ToList());
+            pageStudent.page();
+            var StudentId = Input.InputInt("Chosee Student: ");
+            grade.StudentId = StudentId;
+            grade.DateCreate= DateTime.Now;
+            _grade.Add(grade);
+            Console.WriteLine("Change Successfully\nPress Enter To Continue....");
+            Console.ReadKey();
+
         }
 
         private void NextLevelStudent()
         {
-            throw new NotImplementedException();
+            var students = _student.GetAll();
+            var pageStudent = new Pages<Student>(students.ToList());
+            pageStudent.page();
+            var StudentId = Input.InputInt("Chosee Student: ");
+            var student = students.Where(w => w.Id == StudentId).FirstOrDefault();
+            student.ClassId += 1; 
+            _student.Update(student);
+            Console.WriteLine("Change Successfully\nPress Enter To Continue....");
+            Console.ReadKey();
+
         }
     }
 }
