@@ -7,35 +7,35 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using static Dapper.SqlMapper;
+using Dapper;
 
 namespace ConsoleApp2.Repositories
 {
-    internal class BaseRepository<T> : IBaseRepository<T>
+    internal abstract class BaseRepository<T>
     {
         string connectionString = "Server=DESKTOP-ODVSB0U;DataBase=DataSchoolDb;Trusted_Connection=True;";
-        public IEnumerable<T> Values { get; set; }
-        public BaseRepository()
+        public IEnumerable<T> GetAll()
         {
-            var Query = $"SELECT * FROM {nameof(T)}";
+            var Query = $"SELECT * FROM {typeof(T).Name}";
             using (var conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                Values = conn.Query<T>(Query);
+                return conn.Query<T>(Query);
             }
         }
 
 
-        public void Add(T Data)
+
+        public void Add<T>(T Data)
         {
             var column = GetColumns();
             var stringOfColumn = string.Join(", ", column);
             var stringOfValue = string.Join(", ", column.Select(w => "@" + w));
-            var query = $"INSERT INTO {nameof(T)} ({stringOfColumn}) VALUES ({stringOfValue})";
+            var query = $"INSERT INTO {typeof(T).Name} ({stringOfColumn}) VALUES ({stringOfValue})";
             using (var conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                conn.Execute(query, Data);
+                conn.Execute(query, (object)Data);
             }
         }
         public virtual void Delete(T Entity)
