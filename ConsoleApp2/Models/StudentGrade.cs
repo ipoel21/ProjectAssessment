@@ -8,5 +8,8 @@ namespace ConsoleApp2.Models
 {
     internal class StudentGrade
     {
+        public int Id { get; set; }
+        public int SubjectId { get; set; }
+        public int StudentId { get; set;}
     }
 }

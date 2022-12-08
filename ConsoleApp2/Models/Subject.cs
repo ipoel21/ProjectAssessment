@@ -8,5 +8,10 @@ namespace ConsoleApp2.Models
 {
     internal class Subject
     {
+        public int Id { get; set; }
+        public string NameSubject { get; set; }
+        public int TeacherId { get; set; }
+        public int ClassId { get; set; }
+
     }
 }

@@ -8,5 +8,7 @@ namespace ConsoleApp2.Models
 {
     internal class Class
     {
+        public int Id { get; set; }
+        public string ClassName { get; set; }
     }
 }
